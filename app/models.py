@@ -19,6 +19,6 @@ class Todo(Base):
 
     id = Column(Integer, primary_key=True, index=True)
     title = Column(String(50))
-    user_id: Column(Integer, ForeignKey("users.id"))
+    user_id = Column(Integer, ForeignKey("users.id"))
 
     user = relationship("User", back_populates="todos")

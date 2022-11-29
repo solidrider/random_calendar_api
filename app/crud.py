@@ -29,7 +29,7 @@ def get_users(db: Session):
 
 def get_todos(db: Session):
     return db.query(models.Todo).all()
-    return db.query(models.Todo).filter(models.Todo.user_id == user_id).all()
+    # return db.query(models.Todo).filter(models.Todo.user_id == user_id).all()
 
 def create_user_todo(db: Session, todo: schemas.TodoCreate, user_id: int):
     db_todo = models.Todo(**todo.dict(), user_id=user_id)

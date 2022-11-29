@@ -17,7 +17,7 @@ class User(BaseModel):
     id: int
     access_token: str
     google_id: str
-    # todos: list[Todo] = []
+    todos: list[Todo] = []
 
     class Config:
         orm_mode = True
