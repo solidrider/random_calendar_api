@@ -5,13 +5,14 @@ from pydantic import BaseModel
 
 class Todo(BaseModel):
     id: int
-    user_id: int
     title: str
+    user_id: int
     class Config:
         orm_mode = True
 
-class TodoCreate(Todo):
-    pass
+class TodoCreate(BaseModel):
+    title: str
+    user_id: int
 
 class User(BaseModel):
     id: int
@@ -21,3 +22,10 @@ class User(BaseModel):
 
     class Config:
         orm_mode = True
+
+class UserSignIn(BaseModel):
+    access_token: str
+    google_id: str
+
+class UserSignOut(BaseModel):
+    google_id: str
