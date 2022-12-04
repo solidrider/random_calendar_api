@@ -43,3 +43,11 @@ def create_user_todo(db: Session, request: schemas.TodoCreate):
     db.commit()
     db.refresh(new_todo)
     return new_todo
+
+def delete_user_todo(db: Session, request: schemas.TodoDelete):
+    todo = db.query(models.Todo).filter(models.Todo.id == request.id).first()
+    if(todo.user_id == request.user_id):
+        db.delete(todo)
+        db.commit()
+        return {'message': '削除に成功しました。'}
+    return {'message': '削除に失敗しました。'}  

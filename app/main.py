@@ -42,5 +42,9 @@ def get_todos( user_id: int, db: Session = Depends(get_db)):
     todos = crud.get_todos(db, user_id)
     return todos
 
+@app.delete("/api/todo")
+def delete_user_todo( todo: schemas.TodoDelete, db: Session = Depends(get_db)):
+    return crud.delete_user_todo(db, todo)
+
 if __name__ == '__main__':
     uvicorn.run(app)

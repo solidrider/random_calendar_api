@@ -14,6 +14,10 @@ class TodoCreate(BaseModel):
     title: str
     user_id: int
 
+class TodoDelete(BaseModel):
+    id: int
+    user_id: int
+
 class User(BaseModel):
     id: int
     access_token: str
