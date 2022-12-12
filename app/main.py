@@ -3,6 +3,12 @@ import uvicorn
 from fastapi import Depends, FastAPI, HTTPException
 from sqlalchemy.orm import Session
 
+from fastapi_utils.session import FastAPISessionMaker
+from fastapi_utils.tasks import repeat_every
+
+# database_uri = f"sqlite:///./test.db?check_same_thread=False"
+# sessionmaker = FastAPISessionMaker(database_uri)
+
 from typing import List
 from . import crud, models, schemas
 from .database import SessionLocal, engine
@@ -12,6 +18,17 @@ models.Base.metadata.create_all(bind=engine)
 
 app = FastAPI()
 
+def remove_expired_tokens(db: Session) -> None:
+    """ Pretend this function deletes expired tokens from the database """
+    pass
+
+
+@app.on_event("startup")
+@repeat_every(seconds=1)
+def remove_expired_tokens_task() -> None:
+    print("JAPAN WIN!!")
+    # with sessionmaker.context_session() as db:
+    #     remove_expired_tokens(db=db)
 
 # Dependency
 def get_db():
@@ -20,6 +37,10 @@ def get_db():
         yield db
     finally:
         db.close()
+
+
+def create_event():
+    pass
 
 
 @app.post("/api/auth/signin")

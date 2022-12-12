@@ -1,0 +1,5 @@
+fastapi==0.88.0
+SQLAlchemy==1.3.23
+google-auth==2.3.3
+fastapi_scheduler==0.0.11
+fastapi-utils==0.2.1
