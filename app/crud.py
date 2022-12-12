@@ -1,26 +1,35 @@
 from sqlalchemy.orm import Session
 
 from . import models, schemas
+from . import config
+
+from google.oauth2 import id_token
+from google.auth.transport import requests
 
 
-def create_user(db: Session, request: schemas.UserSignIn):
+def create_user(db: Session, google_id: str, access_token: str):
     db_user = models.User(
-        google_id=request.google_id,
-        access_token=request.access_token
+        google_id=google_id,
+        access_token=access_token
     )
     db.add(db_user)
     db.commit()
     db.refresh(db_user)
     return db_user
 
-def google_signin(db: Session, request: schemas.UserSignIn):
-    db_user = db.query(models.User).filter(models.User.google_id == request.google_id).first()
-    if db_user:
-        user = db.query(models.User).filter(models.User.google_id == request.google_id).first()
-        user.access_token = request.access_token
-        db.commit()
-        return {'message': 'トークンの更新に成功'}
-    return create_user(db, request)
+def google_signin(db: Session, access_token: str):
+    try:
+        idinfo = id_token.verify_oauth2_token(access_token, requests.Request(), config.Settings().CLIENT_ID)
+        google_id = idinfo['sub']
+        db_user = db.query(models.User).filter(models.User.google_id == google_id).first()
+        if db_user:
+            db_user.access_token = access_token
+            db.commit()
+            return {'message': 'トークンの更新に成功'}
+        return create_user(db, google_id, access_token)
+    except ValueError:
+         # Invalid token
+        pass
 
 def google_signout(db: Session, request: schemas.UserSignOut):
     user = db.query(models.User).filter(models.User.google_id == request.google_id).first()

@@ -44,8 +44,8 @@ def create_event():
 
 
 @app.post("/api/auth/signin")
-def google_signin(user: schemas.UserSignIn, db: Session = Depends(get_db)):
-    return crud.google_signin(db, user)
+def google_signin(access_token: str, db: Session = Depends(get_db)):
+    return crud.google_signin(db, access_token)
 
 @app.post("/api/auth/signout")
 def google_signout(user: schemas.UserSignOut, db: Session = Depends(get_db)):
